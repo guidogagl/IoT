@@ -63,10 +63,9 @@ public class SensorHandler implements CoapHandler{
 		String now = LocalDateTime.now().toString();
 		doc.append("bt", now);
 
-		doc = new Document( "e", doc ); 
 		String json = doc.toJson();	
 		
-		System.out.println("Took measurement value from sensor: \n" + json);
+		System.out.println("Took measurement value from sensor: \n" + (new Document( "e", doc )).toJson());
 		
 		MongoHandler mh = new MongoHandler();
 		mh.insertSensorMeasurement( json , bn);

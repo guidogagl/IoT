@@ -4,7 +4,6 @@
   <artifactId>iot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>MyProject</name>
-  
   <repositories>
     <repository>
       	<id>repo.eclipse.org</id>
@@ -61,7 +60,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>iot.app.Main</mainClass>
+							<mainClass>iot.server.register.Main</mainClass>
 						<!-- 	<mainClass>iot.client.MyServer</mainClass> -->
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>

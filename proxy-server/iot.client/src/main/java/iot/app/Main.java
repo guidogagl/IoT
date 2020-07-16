@@ -224,32 +224,28 @@ public class Main {
 			try {
 				name = new String ( myInput.readLine() );
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.exit(1);
+				System.out.println("Formato inserito non corretto");
+				return;
 			}
 			
 			System.out.println("Insert desired temperature: ");
 			String temp = null;
-			Boolean goodInput = new Boolean(true);
-			do{
-				Float t = null;
-				try {
-					temp = new String ( myInput.readLine() );
-					t  = new Float( Float.parseFloat(temp) );
-				} catch (Exception e) {
-					goodInput = false;	
-				}
-				
-				if( !goodInput || t < minTemperature || t > maxTemperature || temp.length() > 5 ){
-					System.out.println("Formato temperatura non ammesso.\nInserire un valore tra " + minTemperature + " e " + maxTemperature);
-					System.out.println("Con precisione non maggiore di 0,01");
-					goodInput = false;
-				}else{
-					goodInput = true;
-				}
-			}while(!goodInput);
 			
+			Float t = null;
+			try {
+				temp = new String ( myInput.readLine() );
+				t  = new Float( Float.parseFloat(temp) );
+			} catch (Exception e) {
+				System.out.println("Formato temperatura non ammesso.\nInserire un valore tra " + minTemperature + " e " + maxTemperature);
+				System.out.println("Con precisione non maggiore di 0,01");
+				return;
+			}
+			
+			if( t < minTemperature || t > maxTemperature || temp.length() > 5 ){
+				System.out.println("Formato temperatura non ammesso.\nInserire un valore tra " + minTemperature + " e " + maxTemperature);
+				System.out.println("Con precisione non maggiore di 0,01");
+				return;
+			}
 			String sens_str = mh.getADevice(name, "");
 			String act_str = mh.getADevice(name, "actuator");
 			
