@@ -13,7 +13,7 @@ Open a shell and copy this instructions:
 $ cd ~/contiki-ng/
 $ mkdir project
 $ cd project
-$ git clone 
+$ git clone https://github.com/guidogagl/IoT.git
 ```
 
 ## Application filesystem
@@ -22,9 +22,9 @@ $ git clone
 * termometer_sensor - contains the file of the sensor node that provides the observable resources to the cloud
 * actuator_sensor - contains the file of the sensor node that emulate a temperature actuator 
 * proxy-server/iot.client/src/main/java/iot/ - contains the Java-Californium packages that emulate the cloud application
-** ./app - contains the package needed by user to interact with the LLN providing a CLI
-** ./db - contains the class needed by the other packages to interact with mongodb
-** ./server - contains the packages offering Coap Resources to interact with the LLN
+  * ./app - contains the package needed by user to interact with the LLN providing a CLI
+  * ./db - contains the class needed by the other packages to interact with mongodb
+  * ./server - contains the packages offering Coap Resources to interact with the LLN
 
 
 ## How to run the application
