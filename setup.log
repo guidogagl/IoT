@@ -1,0 +1,26 @@
+../../os/services/rpl-border-router/embedded/Makefile.embedded:13: warning: overriding recipe for target 'connect-router-cooja'
+../../arch/platform/cooja/Makefile.cooja:34: warning: ignoring old recipe for target 'connect-router-cooja'
+sudo ../../tools/serial-io/tunslip6 -a 127.0.0.1 fd00::1/64
+slip connected to ``127.0.0.1:60001''
+opened tun device ``/dev/tun0''
+ifconfig tun0 inet `hostname` mtu 1500 up
+ifconfig tun0 add fd00::1/64
+ifconfig tun0 add fe80::0:0:0:1/64
+ifconfig tun0
+
+tun0: flags=4305<UP,POINTOPOINT,RUNNING,NOARP,MULTICAST>  mtu 1500
+        inet 127.0.1.1  netmask 255.255.255.255  destination 127.0.1.1
+        inet6 fd00::1  prefixlen 64  scopeid 0x0<global>
+        inet6 fe80::1  prefixlen 64  scopeid 0x20<link>
+        inet6 fe80::b8f8:56b6:2e30:1231  prefixlen 64  scopeid 0x20<link>
+        unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 500  (UNSPEC)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+tunslip6: serial_to_tun: read: Success
+ifconfig tun0 down
+netstat -nr | awk '{ if ($2 == "tun0") print "route delete -net "$1; }' | sh
+../../os/services/rpl-border-router/embedded/Makefile.embedded:13: recipe for target 'connect-router-cooja' failed
+make: *** [connect-router-cooja] Error 1

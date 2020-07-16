@@ -4,6 +4,8 @@ import iot.db.MongoHandler;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
@@ -42,8 +44,13 @@ public class MyResourceDiscovery {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				cr = discovery_client.get();
-				exp = exp * 2;
+				try{
+					cr = discovery_client.get();
+					String temp = cr.getResponseText();
+					exp = exp * 2;
+				}catch(Exception e){
+					cr = null;
+				}
 			}
 
 			res_root = cr.getResponseText();
@@ -58,6 +65,10 @@ public class MyResourceDiscovery {
 		} while( corrupted_payload );
 
 		System.out.print("Mote: " + new_uri.toString() + "\n");
+		
+		Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+		mongoLogger.setLevel(Level.SEVERE);
+
 		if( res_root.equals(sensor_root) ) { 
 			// add the sensor to the database and observe the resource
 			MongoHandler mh = new MongoHandler();

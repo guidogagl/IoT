@@ -10,6 +10,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 
+import org.apache.log4j.LogManager;
 import org.bson.Document;
 
 import java.util.Arrays;
@@ -26,19 +27,24 @@ import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MongoHandler{
 	String coll_str = "sensors";
-	
+
 	MongoClient mongoClient = null; 
 	MongoDatabase db = null;
 	MongoCollection col = null;
 	MongoCollection act = null;
 	MongoCollection rooms = null;
-	
+
 	public MongoHandler(){
-		Logger mongoLogger = Logger.getLogger( "com.mongodb" );
-		mongoLogger.setLevel(Level.SEVERE);
-		
+		LogManager.getLogger("org.mongodb.driver.connection").setLevel(org.apache.log4j.Level.OFF);
+		LogManager.getLogger("org.mongodb.driver.management").setLevel(org.apache.log4j.Level.OFF);
+		LogManager.getLogger("org.mongodb.driver.cluster").setLevel(org.apache.log4j.Level.OFF);
+		LogManager.getLogger("org.mongodb.driver.protocol.insert").setLevel(org.apache.log4j.Level.OFF);
+		LogManager.getLogger("org.mongodb.driver.protocol.query").setLevel(org.apache.log4j.Level.OFF);
+		LogManager.getLogger("org.mongodb.driver.protocol.update").setLevel(org.apache.log4j.Level.OFF);
+
 		mongoClient = new MongoClient();
 		db = mongoClient.getDatabase("db");
 		col = db.getCollection( coll_str );
@@ -47,9 +53,11 @@ public class MongoHandler{
 	}
 	
 	public void close(){
+
 		mongoClient.close();
 	}
 	public void insertSensor(URI bn){
+
 		if (this.sensorIsPresent(bn)) return;
 		
 		Document doc = new Document("bn", bn.toString())
@@ -63,6 +71,7 @@ public class MongoHandler{
 	}
 	
 	public void insertActuator(URI bn) {
+
 		if (this.actuatorIsPresent(bn)) 
 			return;
 				
@@ -77,6 +86,8 @@ public class MongoHandler{
 	}
 	
 	public void insertSensorMeasurement(String json, String bn) {
+
+
 		if(json == null || json.isEmpty()) {
 			System.out.println("BAD JSON measurements received from sensor " + bn);
 			return;
@@ -98,18 +109,24 @@ public class MongoHandler{
 	}
 	
 	public Boolean sensorIsPresent(URI bn) {
+
+	
 		if ( col.count( new Document("bn", bn.toString())) > 0 )
 			return new Boolean(true);
 		return new Boolean(false);
 	}
 
 	public Boolean actuatorIsPresent(URI bn) {
+
+	
 		if ( act.count( new Document("bn", bn.toString())) > 0 )
 			return new Boolean(true);
 		return new Boolean(false);
 	}
 	
 	public Boolean sensorIsPresent(URI bn, String room) {
+
+	
 		if ( col.count( new Document("bn", bn.toString() )
 								.append("room", room)
 				) > 0 )
@@ -118,14 +135,20 @@ public class MongoHandler{
 	}
 	
 	public MongoCursor<Document> getRooms(){
+
+	
 		return rooms.find().iterator();
 	}
 	
 	public Document getRoom( String roomName ){
+
+	
 		return (Document) rooms.find( eq("name", roomName) ).first();
 	}
 	
 	public List<String> getRoomActuators( String roomName ){
+
+	
 		List<String> r = new ArrayList<String>();
 
 		MongoCursor<Document> cur = act.find( eq( "room", roomName) ).iterator();
@@ -137,6 +160,10 @@ public class MongoHandler{
 	}
 
 	public List<String> getRoomSensors( String roomName ){
+
+	
+
+	
 		List<String> r = new ArrayList<String>();
 
 		MongoCursor<Document> cur = col.find( eq( "room", roomName) ).iterator();
@@ -148,7 +175,8 @@ public class MongoHandler{
 	}
 
  	public boolean insertNewRoom(String name) {
-		
+
+	
 		if ( rooms.count( new Document("name", name)  )  > 0 ) 
 			return false;
 		
@@ -161,7 +189,8 @@ public class MongoHandler{
 	}
 
 	public boolean deleteRoom(String name) {
-		
+
+	
 		if ( rooms.count( new Document("name", name)  )  == 0 ) 
 			return false;
 		
@@ -189,6 +218,8 @@ public class MongoHandler{
 	}
 	
 	public boolean addActuatorToRoom(String room, String actuator) {
+
+	
 		if ( rooms.count( new Document("name", room)  )  == 0 ) 
 			return false;
 		if ( act.count( new Document("bn", actuator).append("room", "-1")  )  == 0 ) 
@@ -203,6 +234,8 @@ public class MongoHandler{
 	}
 	
 	public boolean addSensorToRoom(String room, String sensor) {
+
+	
 		if ( rooms.count( new Document("name", room)  )  == 0 ) 
 			return false;
 		if ( col.count( new Document("bn", sensor).append("room", "-1")  )  == 0 ) 
@@ -216,6 +249,8 @@ public class MongoHandler{
 	}
 	
 	public boolean removeActuatorToRoom(String room, String actuator) {
+
+	
 		if ( rooms.count( new Document("name", room)  )  == 0 ) 
 			return false;
 		if ( act.count( new Document("bn", actuator).append("room", room)  )  == 0 ) 
@@ -230,6 +265,8 @@ public class MongoHandler{
 	}
 	
 	public boolean removeSensorToRoom(String room, String sensor) {
+
+	
 		if ( rooms.count( new Document("name", room)  )  == 0 ) 
 			return false;
 		if ( col.count( new Document("bn", sensor).append("room", room)  )  == 0 ) 
@@ -250,10 +287,14 @@ public class MongoHandler{
 	}
 	
 	public MongoCursor<Document> getSensorMeasurements(String sensor){
+
+	
 		return col.find(eq("bn", sensor)).iterator();
 	}
 	
 	public List<String> getDevicesList(String type){
+
+	
 		MongoCollection mycol = col;
 		
 		if(type.contentEquals("actuator"))
@@ -269,6 +310,8 @@ public class MongoHandler{
 	}
 	
 	public String getADevice(String room, String type) {
+
+	
 		MongoCollection mycol = col;
 		if( type.contentEquals("actuator") )
 			mycol = act;
