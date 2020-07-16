@@ -54,7 +54,7 @@ This two scripts will start 2 different Coap servers offering the resources /reg
 
 Now you can start the simulation ( please check the speed limit is set at 100% before ).
 
-To interact with the application follow the instruction listed after running in another shell the script:
+To interact with the application follow the instructions shown after running in another shell the script:
 ```shell
 $ cd ~/contiki-ng/project
 $ sh run_client.sh
